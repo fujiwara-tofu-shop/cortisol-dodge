@@ -1,8 +1,7 @@
 // Play.fun SDK Integration
 // SDK loaded via CDN in index.html
 
-// TODO: Replace with actual game ID after registering at play.fun
-const GAME_ID = 'YOUR_GAME_ID_HERE';
+const GAME_ID = '7bd0cf3d-a01c-4749-ba2b-9be575dd4877';
 
 let sdk = null;
 let isReady = false;
