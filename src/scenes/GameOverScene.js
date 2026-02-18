@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GAME } from '../core/Constants.js';
 import { gameState } from '../core/GameState.js';
+import { reportGameOver } from '../playfun.js';
 
 export default class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -9,6 +10,9 @@ export default class GameOverScene extends Phaser.Scene {
 
   create() {
     const centerX = GAME.WIDTH / 2;
+    
+    // Report final score to Play.fun
+    reportGameOver(gameState.score);
     
     // Dark overlay
     this.cameras.main.setBackgroundColor(0x0a0a0a);

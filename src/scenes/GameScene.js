@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GAME, PLAYER, CORTISOL, SPAWN, STRESSOR_TYPES, COLORS } from '../core/Constants.js';
 import { gameState } from '../core/GameState.js';
 import { eventBus, Events } from '../core/EventBus.js';
+import { addPoints, savePoints } from '../playfun.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -458,10 +459,11 @@ export default class GameScene extends Phaser.Scene {
         stressor.label.setPosition(stressor.x, stressor.y - 35);
       }
       
-      // Kill if off screen
+      // Kill if off screen - dodged successfully!
       if (stressor.y > GAME.HEIGHT + 50) {
         this.killStressor(stressor);
         gameState.incrementDodged();
+        addPoints(10); // Play.fun points for dodging
       }
     });
   }

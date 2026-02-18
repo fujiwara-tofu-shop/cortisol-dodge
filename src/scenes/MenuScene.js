@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GAME, COLORS } from '../core/Constants.js';
 import { gameState } from '../core/GameState.js';
+import { initPlayFun } from '../playfun.js';
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -114,7 +115,10 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
   }
 
-  startGame() {
+  async startGame() {
+    // Initialize Play.fun SDK
+    await initPlayFun();
+    
     gameState.reset();
     this.scene.start('GameScene');
     this.scene.launch('UIScene');
