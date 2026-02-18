@@ -46,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
       loop: true,
     });
     
-    // Collision detection
+    // Collision detection - group based
     this.physics.add.overlap(
       this.player,
       this.stressors,
@@ -147,29 +147,39 @@ export default class GameScene extends Phaser.Scene {
     const x = Phaser.Math.Between(50, GAME.WIDTH - 50);
     const y = -50;
     
-    // Get or create stressor sprite
-    let stressor = this.stressors.get(x, y, `stressor-${stressorType.key}`);
+    // Check if we have an inactive stressor to reuse
+    let stressor = this.stressors.getFirstDead(false);
     
-    if (!stressor) return;
+    if (stressor) {
+      // Reuse existing sprite
+      stressor.setTexture(`stressor-${stressorType.key}`);
+      stressor.setActive(true);
+      stressor.setVisible(true);
+      stressor.setPosition(x, y);
+    } else if (this.stressors.getLength() < 50) {
+      // Create new sprite and add to group
+      stressor = this.physics.add.sprite(x, y, `stressor-${stressorType.key}`);
+      this.stressors.add(stressor);
+    } else {
+      return; // Pool full
+    }
     
-    stressor.setActive(true);
-    stressor.setVisible(true);
-    stressor.setPosition(x, y);
     stressor.setScale(1.5);
     stressor.setDepth(5);
+    stressor.setAngle(0);
     
     // Store type data
     stressor.stressorType = stressorType;
     
     // Set velocity
-    const angle = Phaser.Math.Between(-15, 15); // slight angle variation
+    const angle = Phaser.Math.Between(-15, 15);
     const speed = this.stressorSpeed + Phaser.Math.Between(-30, 30);
     stressor.setVelocity(
       Math.sin(Phaser.Math.DegToRad(angle)) * speed * 0.3,
       speed
     );
     
-    // Add label
+    // Create or update label
     if (!stressor.label) {
       stressor.label = this.add.text(0, 0, stressorType.label, {
         fontSize: '14px',
@@ -178,19 +188,19 @@ export default class GameScene extends Phaser.Scene {
         stroke: '#000000',
         strokeThickness: 3,
         align: 'center',
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setDepth(6);
     } else {
       stressor.label.setText(stressorType.label);
       stressor.label.setVisible(true);
     }
     
-    // Rotation wobble
+    // Wobble animation
     this.tweens.add({
       targets: stressor,
-      angle: { from: -10, to: 10 },
-      duration: 300,
+      angle: { from: -8, to: 8 },
+      duration: 400,
       yoyo: true,
-      repeat: -1,
+      repeat: 3,
       ease: 'Sine.easeInOut',
     });
   }
