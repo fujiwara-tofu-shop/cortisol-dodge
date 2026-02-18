@@ -2,6 +2,7 @@
 // SDK loaded via CDN in index.html
 
 const GAME_ID = '7bd0cf3d-a01c-4749-ba2b-9be575dd4877';
+const GAME_KEY = '8Gg2e3iCxZDfBKHgT3N9ryH3xUw3xnqYztUW3zVbM1sK';
 
 let sdk = null;
 let isReady = false;
@@ -25,6 +26,7 @@ export async function initPlayFun() {
     console.log('Initializing Play.fun SDK with class:', SDKClass.name || 'SDK');
     sdk = new SDKClass({
       gameId: GAME_ID,
+      apiKey: GAME_KEY,
       ui: {
         usePointsWidget: true,
       },
