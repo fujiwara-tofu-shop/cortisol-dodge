@@ -9,7 +9,9 @@ export default class UIScene extends Phaser.Scene {
   }
 
   create() {
-    const centerX = GAME.WIDTH / 2;
+    const w = this.scale.width;
+    const h = this.scale.height;
+    const centerX = w / 2;
     
     // Cortisol label
     this.add.text(centerX, 25, '😰 CORTISOL', {
@@ -64,7 +66,7 @@ export default class UIScene extends Phaser.Scene {
     }).setOrigin(0.5);
     
     // Stressors dodged
-    this.dodgedText = this.add.text(GAME.WIDTH - 20, 25, '✓ 0', {
+    this.dodgedText = this.add.text(w - 20, 25, '✓ 0', {
       fontSize: '18px',
       fontFamily: 'Arial',
       fill: '#4ade80',
@@ -80,15 +82,15 @@ export default class UIScene extends Phaser.Scene {
     // Warning overlay (hidden by default)
     this.warningOverlay = this.add.rectangle(
       centerX,
-      GAME.HEIGHT / 2,
-      GAME.WIDTH,
-      GAME.HEIGHT,
+      h / 2,
+      w,
+      h,
       0xff0000,
       0
     );
     
     // Dash cooldown indicator
-    this.dashIndicator = this.add.text(centerX, GAME.HEIGHT - 40, '[ SPACE: PANIC DASH ]', {
+    this.dashIndicator = this.add.text(centerX, h - 40, '[ SPACE: PANIC DASH ]', {
       fontSize: '14px',
       fontFamily: 'Arial',
       fill: '#4ade80',

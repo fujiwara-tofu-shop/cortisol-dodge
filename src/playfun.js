@@ -11,14 +11,19 @@ let pendingPoints = 0;
  * Initialize the Play.fun SDK
  */
 export async function initPlayFun() {
-  // Check if SDK is available (loaded from CDN)
-  if (typeof OpenGameSDK === 'undefined') {
-    console.warn('Play.fun SDK not loaded');
+  // Check if SDK is available (loaded from CDN) - try both class names
+  const SDKClass = typeof PlayFunSDK !== 'undefined' ? PlayFunSDK 
+                 : typeof OpenGameSDK !== 'undefined' ? OpenGameSDK 
+                 : null;
+  
+  if (!SDKClass) {
+    console.warn('Play.fun SDK not loaded (neither PlayFunSDK nor OpenGameSDK found)');
     return false;
   }
 
   try {
-    sdk = new OpenGameSDK({
+    console.log('Initializing Play.fun SDK with class:', SDKClass.name || 'SDK');
+    sdk = new SDKClass({
       gameId: GAME_ID,
       ui: {
         usePointsWidget: true,

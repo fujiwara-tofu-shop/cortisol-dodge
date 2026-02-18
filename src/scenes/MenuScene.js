@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import { GAME, COLORS } from '../core/Constants.js';
 import { gameState } from '../core/GameState.js';
-import { initPlayFun } from '../playfun.js';
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -9,7 +8,9 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    const centerX = GAME.WIDTH / 2;
+    const w = this.scale.width;
+    const h = this.scale.height;
+    const centerX = w / 2;
     
     // Background
     this.cameras.main.setBackgroundColor(GAME.BG_COLOR);
@@ -94,13 +95,14 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     // Player preview
-    const player = this.add.image(centerX, 800, 'player-idle');
+    const playerY = h - 160;
+    const player = this.add.image(centerX, playerY, 'player-idle');
     player.setScale(3);
     
     // Floating animation
     this.tweens.add({
       targets: player,
-      y: 810,
+      y: playerY + 10,
       duration: 1000,
       yoyo: true,
       repeat: -1,
@@ -108,17 +110,14 @@ export default class MenuScene extends Phaser.Scene {
     });
 
     // Credits
-    this.add.text(centerX, GAME.HEIGHT - 30, 'A meme by Fujiwara Tofu Shop', {
+    this.add.text(centerX, h - 30, 'A meme by Fujiwara Tofu Shop', {
       fontSize: '14px',
       fontFamily: 'Arial',
       fill: '#6b7280',
     }).setOrigin(0.5);
   }
 
-  async startGame() {
-    // Initialize Play.fun SDK
-    await initPlayFun();
-    
+  startGame() {
     gameState.reset();
     this.scene.start('GameScene');
     this.scene.launch('UIScene');

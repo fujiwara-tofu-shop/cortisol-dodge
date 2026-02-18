@@ -69,21 +69,26 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBackground() {
+    const w = this.scale.width;
+    const h = this.scale.height;
+    
     // Simple gradient lines effect
     const graphics = this.add.graphics();
-    for (let y = 0; y < GAME.HEIGHT; y += 60) {
-      const alpha = 0.02 + (y / GAME.HEIGHT) * 0.03;
+    for (let y = 0; y < h; y += 60) {
+      const alpha = 0.02 + (y / h) * 0.03;
       graphics.lineStyle(1, 0x3b82f6, alpha);
-      graphics.lineBetween(0, y, GAME.WIDTH, y);
+      graphics.lineBetween(0, y, w, y);
     }
     
     // Side warning zones
-    const leftZone = this.add.rectangle(30, GAME.HEIGHT / 2, 60, GAME.HEIGHT, 0xef4444, 0.05);
-    const rightZone = this.add.rectangle(GAME.WIDTH - 30, GAME.HEIGHT / 2, 60, GAME.HEIGHT, 0xef4444, 0.05);
+    const leftZone = this.add.rectangle(30, h / 2, 60, h, 0xef4444, 0.05);
+    const rightZone = this.add.rectangle(w - 30, h / 2, 60, h, 0xef4444, 0.05);
   }
 
   createPlayer() {
-    this.player = this.physics.add.sprite(PLAYER.START_X, PLAYER.START_Y, 'player-idle');
+    const w = this.scale.width;
+    const h = this.scale.height;
+    this.player = this.physics.add.sprite(w / 2, h - 120, 'player-idle');
     this.player.setScale(2.5);
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(20, 28);
@@ -104,9 +109,10 @@ export default class GameScene extends Phaser.Scene {
     
     // Touch zones for mobile
     this.input.on('pointerdown', (pointer) => {
-      if (pointer.x < GAME.WIDTH / 3) {
+      const w = this.scale.width;
+      if (pointer.x < w / 3) {
         this.touchDir = -1;
-      } else if (pointer.x > GAME.WIDTH * 2 / 3) {
+      } else if (pointer.x > w * 2 / 3) {
         this.touchDir = 1;
       } else {
         // Center tap = dash
@@ -145,7 +151,8 @@ export default class GameScene extends Phaser.Scene {
     const stressorType = this.getWeightedStressor();
     
     // Spawn position - random X, above screen
-    const x = Phaser.Math.Between(50, GAME.WIDTH - 50);
+    const w = this.scale.width;
+    const x = Phaser.Math.Between(50, w - 50);
     const y = -50;
     
     // Check if we have an inactive stressor to reuse
@@ -360,7 +367,7 @@ export default class GameScene extends Phaser.Scene {
     this.cameras.main.flash(300, 255, 0, 0);
     
     // Show burnout text
-    const burnoutText = this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2, '💀 BURNOUT 💀', {
+    const burnoutText = this.add.text(this.scale.width / 2, this.scale.height / 2, '💀 BURNOUT 💀', {
       fontSize: '48px',
       fontFamily: 'Arial Black',
       fill: '#ef4444',
@@ -460,7 +467,7 @@ export default class GameScene extends Phaser.Scene {
       }
       
       // Kill if off screen - dodged successfully!
-      if (stressor.y > GAME.HEIGHT + 50) {
+      if (stressor.y > this.scale.height + 50) {
         this.killStressor(stressor);
         gameState.incrementDodged();
         addPoints(10); // Play.fun points for dodging
